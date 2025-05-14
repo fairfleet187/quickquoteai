@@ -1,7 +1,5 @@
 // pages/index.js
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 import { useState } from 'react';
 
 export default function Home() {
@@ -10,18 +8,27 @@ export default function Home() {
   const [price, setPrice] = useState(0);
   const [payUrl, setPayUrl] = useState('');
 
-  const onGenerate = () => {
-    const docDefinition = {
-      content: [
-        { text: 'Invoice', style: 'header' },
-        `${qty} × ${desc} @ $${price}`
-      ],
-      styles: {
-        header: { fontSize: 18, bold: true }
-      }
-    };
-    pdfMake.createPdf(docDefinition).open();
+ const onGenerate = async () => {
+  // dynamically import pdfMake & its fonts on the client only
+  const pdfMakeModule = await import('pdfmake/build/pdfmake');
+  const vfsModule     = await import('pdfmake/build/vfs_fonts');
+
+  const pdfMake = pdfMakeModule.default;
+  pdfMake.vfs   = vfsModule.pdfMake.vfs;
+
+  // now you can build & open your PDF
+  const docDefinition = {
+    content: [
+      { text: 'Invoice', style: 'header' },
+      `${qty} × ${desc} @ $${price}`
+    ],
+    styles: {
+      header: { fontSize: 18, bold: true }
+    }
   };
+  pdfMake.createPdf(docDefinition).open();
+};
+
 
   const onPay = async () => {
     const res = await fetch('/api/createCheckout', {
