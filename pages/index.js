@@ -1,30 +1,26 @@
-// pages/index.j 
+// pages/index.js
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 import { useState } from 'react';
 
 export default function Home() {
   const [desc, setDesc] = useState('');
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
-  const [pdfUrl, setPdfUrl] = useState('');
   const [payUrl, setPayUrl] = useState('');
 
   const onGenerate = () => {
-  const docDefinition = {
-    content: [
-      { text: 'Invoice', style: 'header' },
-      `${qty} × ${desc} @ $${price}`
-    ],
-    styles: {
-      header: { fontSize: 18, bold: true }
-    }
-  };
-  pdfMake.createPdf(docDefinition).open();
-};
-
+    const docDefinition = {
+      content: [
+        { text: 'Invoice', style: 'header' },
+        `${qty} × ${desc} @ $${price}`
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true }
+      }
+    };
+    pdfMake.createPdf(docDefinition).open();
   };
 
   const onPay = async () => {
@@ -65,26 +61,13 @@ export default function Home() {
         />
       </div>
 
-      <button
-        onClick={onGenerate}
-        className="mr-2 px-4 py-2 bg-blue-600 text-white rounded"
-      >
+      <button onClick={onGenerate} className="mr-2 px-4 py-2 bg-blue-600 text-white rounded">
         Generate PDF
       </button>
-      <button
-        onClick={onPay}
-        className="px-4 py-2 bg-green-600 text-white rounded"
-      >
+      <button onClick={onPay} className="px-4 py-2 bg-green-600 text-white rounded">
         Create Pay Link
       </button>
 
-      {pdfUrl && (
-        <div className="mt-4">
-          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-            Download Invoice PDF
-          </a>
-        </div>
-      )}
       {payUrl && (
         <div className="mt-4">
           <a href={payUrl} target="_blank" rel="noopener noreferrer" className="text-green-500">
