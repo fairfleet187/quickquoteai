@@ -1,4 +1,8 @@
-// pages/index.js
+// pages/index.j 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 import { useState } from 'react';
 
 export default function Home() {
@@ -8,15 +12,19 @@ export default function Home() {
   const [pdfUrl, setPdfUrl] = useState('');
   const [payUrl, setPayUrl] = useState('');
 
-  const onGenerate = async () => {
-    const res = await fetch('/api/generateInvoice', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description: desc, quantity: qty, unitPrice: price })
-    });
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    setPdfUrl(url);
+  const onGenerate = () => {
+  const docDefinition = {
+    content: [
+      { text: 'Invoice', style: 'header' },
+      `${qty} × ${desc} @ $${price}`
+    ],
+    styles: {
+      header: { fontSize: 18, bold: true }
+    }
+  };
+  pdfMake.createPdf(docDefinition).open();
+};
+
   };
 
   const onPay = async () => {
