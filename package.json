@@ -18,6 +18,6 @@
     "stripe": "^10.0.0",
     "openai": "^4.0.0",
     "pdfmake": "^0.2.5",
-    "pdf-annotate": "^1.1.0"
+    
   }
 }
