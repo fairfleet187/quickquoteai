@@ -7,15 +7,34 @@ export default function Home() {
   const [payUrl, setPayUrl] = useState('');
 
   const onGenerate = async () => {
-    console.log('🖨️ Generate clicked!', { desc, qty, price });
+  console.log('🖨️ Generate clicked!', { desc, qty, price });
+
+  // 1️⃣ Load pdfMake (and its fonts) only in the browser:
+  const [{ default: pdfMake }, pdfFonts] = await Promise.all([
+    import('pdfmake/build/pdfmake'),
+    import('pdfmake/build/vfs_fonts'),
+  ]);
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+  // 2️⃣ Define your invoice document:
+  const docDefinition = {
+    content: [
+      { text: 'Invoice', style: 'header' },
+      `${qty} × ${desc} @ $${price}`,
+    ],
+    styles: {
+      header: { fontSize: 18, bold: true },
+    },
+  };
+
+  // 3️⃣ Generate & open the PDF:
+  pdfMake.createPdf(docDefinition).open();
+};
+
 
     // 1️⃣ load pdfMake and its fonts only in the browser:
     const [{ default: pdfMake }, pdfFonts] = await Promise.all([
-      import('pdfmake/build/pdfmake'),
-      import('pdfmake/build/vfs_fonts')
-    ]);
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
+      
     // 2️⃣ define your invoice:
     const docDefinition = {
       content: [
