@@ -18,15 +18,7 @@ export default function Home() {
 
   // 2️⃣ Define your invoice document:
   const docDefinition = {
-    content: [
-      { text: 'Invoice', style: 'header' },
-      `${qty} × ${desc} @ $${price}`,
-    ],
-    styles: {
-      header: { fontSize: 18, bold: true },
-    },
-  };
-
+  
   // 3️⃣ Generate & open the PDF:
   pdfMake.createPdf(docDefinition).open();
 };
