@@ -11,10 +11,7 @@ export default function Home() {
 
   // 1️⃣ Load pdfMake (and its fonts) only in the browser:
   const [{ default: pdfMake }, pdfFonts] = await Promise.all([
-    import('pdfmake/build/pdfmake'),
-    import('pdfmake/build/vfs_fonts'),
-  ]);
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    
 
   // 2️⃣ Define your invoice document:
   const docDefinition = {
